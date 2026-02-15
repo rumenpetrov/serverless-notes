@@ -1,0 +1,18 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Editor from "@components/Editor.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const templates = await getCollection("templates");
+  return templates.map((template) => ({
+    params: { templateId: template.id },
+  }));
+}
+
+const { templateId } = Astro.params;
+---
+
+<Layout>
+  <Editor templateId={templateId} />
+</Layout>

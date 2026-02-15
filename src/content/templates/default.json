@@ -1,0 +1,12 @@
+{
+    "title": "Default Template",
+    "description": "A simple default template to get you started.",
+    "version": 1,
+    "content": [
+        {
+            "type": "text",
+            "name": "greeting",
+            "defaultValue": "Hello World"
+        }
+    ]
+}

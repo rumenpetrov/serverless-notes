@@ -1,0 +1,22 @@
+{
+    "title": "Student Report Card",
+    "description": "A student report card template.",
+    "version": 1,
+    "content": [
+        {
+            "type": "text",
+            "name": "studentName",
+            "defaultValue": "Ivan Ivanov"
+        },
+        {
+            "type": "text",
+            "name": "studentAvatar",
+            "defaultValue": "https://as1.ftcdn.net/v2/jpg/01/25/82/12/1000_F_125821215_yoIIsTPyiXFdnH9DA2GOeId3fv4b8FNw.jpg"
+        },
+        {
+            "type": "text",
+            "name": "studentClass",
+            "defaultValue": "6a"
+        }
+    ]
+}

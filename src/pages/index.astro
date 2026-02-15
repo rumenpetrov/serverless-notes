@@ -1,8 +1,20 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import Editor from "@components/Editor.astro";
+import { createPath } from "@utils/url";
+import { getCollection } from "astro:content";
+
+const templates = await getCollection("templates");
 ---
 
 <Layout>
-  <Editor />
+  <h1>Available Templates</h1>
+  <ul>
+    {
+      templates.map((template) => (
+        <li>
+          <a href={createPath(template.id)}>{template.data.title}</a>
+        </li>
+      ))
+    }
+  </ul>
 </Layout>

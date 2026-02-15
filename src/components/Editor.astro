@@ -1,8 +1,28 @@
 ---
+import { getEntry } from "astro:content";
 
+interface Props {
+  templateId: string;
+}
+
+const { templateId } = Astro.props;
+
+const entry = await getEntry("templates", templateId);
+const template = entry?.data;
 ---
 
 <div class="box">
+  {
+    template && (
+      <header>
+        <h1>
+          {template.title} - <span>v{template.version}</span>
+        </h1>
+        <p>{template.description}</p>
+      </header>
+    )
+  }
+
   <textarea id="note" placeholder="text here..."></textarea>
 </div>
 

@@ -1,0 +1,22 @@
+{
+    "title": "Test UI Template",
+    "description": "Template for verifying dynamic UI generation",
+    "version": 1,
+    "content": [
+        {
+            "type": "text",
+            "name": "textField",
+            "defaultValue": "Default Text"
+        },
+        {
+            "type": "number",
+            "name": "numberField",
+            "defaultValue": "42"
+        },
+        {
+            "type": "textarea",
+            "name": "areaField",
+            "defaultValue": "Default Area"
+        }
+    ]
+}

@@ -14,30 +14,111 @@ const template = entry?.data;
 <div class="box">
   {
     template && (
-      <header>
-        <h1>
-          {template.title} - <span>v{template.version}</span>
-        </h1>
-        <p>{template.description}</p>
-      </header>
+      <>
+        <header>
+          <h1>
+            {template.title} - <span>v{template.version}</span>
+          </h1>
+          <p>{template.description}</p>
+        </header>
+
+        <div id="preview" class="preview">
+          <h3>Preview</h3>
+          <div id="preview-content" />
+        </div>
+
+        <form id="editor-form">
+          {template.content.map((field) => (
+            <div class="field">
+              <label for={field.name}>{field.name}</label>
+              {field.type === "textarea" ? (
+                <textarea
+                  name={field.name}
+                  id={field.name}
+                  placeholder={field.defaultValue}
+                >
+                  {field.defaultValue}
+                </textarea>
+              ) : field.type === "number" ? (
+                <input
+                  type="number"
+                  name={field.name}
+                  id={field.name}
+                  placeholder={field.defaultValue}
+                  value={field.defaultValue}
+                />
+              ) : (
+                <input
+                  type="text"
+                  name={field.name}
+                  id={field.name}
+                  placeholder={field.defaultValue}
+                  value={field.defaultValue}
+                />
+              )}
+            </div>
+          ))}
+        </form>
+      </>
     )
   }
-
-  <textarea id="note" placeholder="text here..."></textarea>
 </div>
 
 <style>
   .box {
     padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
   }
 
-  #note {
+  .preview {
+    margin-bottom: 32px;
+    padding: 16px;
+    border: 1px dashed #ccc;
+    background: #f9f9f9;
+    border-radius: 4px;
+  }
+
+  .preview h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #444;
+  }
+
+  .preview-item {
+    margin-bottom: 8px;
+  }
+
+  .preview-label {
+    font-weight: bold;
+    margin-right: 8px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+
+  input,
+  textarea {
     display: block;
     width: 100%;
-    height: 50vh;
-    padding: 0;
-    margin: 0;
+    padding: 8px;
     box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  textarea {
+    min-height: 150px;
+    resize: vertical;
   }
 </style>
 
@@ -45,43 +126,97 @@ const template = entry?.data;
   import decompress from "@utils/decompress";
   import compress from "@utils/compress";
 
-  const noteElement = document.getElementById("note") as HTMLTextAreaElement;
+  const formElement = document.getElementById("editor-form") as HTMLFormElement;
+  const previewContent = document.getElementById("preview-content");
+
+  // Function to gather form data
+  function getFormData() {
+    if (!formElement) return {};
+    const formData = new FormData(formElement);
+    const data: Record<string, any> = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+    return data;
+  }
+
+  // Function to update preview
+  function updatePreview(data: Record<string, any>) {
+    if (!previewContent) return;
+
+    previewContent.innerHTML = Object.entries(data)
+      .map(
+        ([key, value]) => `
+        <div class="preview-item">
+          <span class="preview-label">${key}:</span>
+          <span class="preview-value">${value}</span>
+        </div>
+      `,
+      )
+      .join("");
+  }
+
+  // Function to populate form data
+  function setFormData(data: Record<string, any>) {
+    if (!formElement || !data) return;
+
+    Array.from(formElement.elements).forEach((element) => {
+      const input = element as HTMLInputElement | HTMLTextAreaElement;
+
+      if (
+        !(input instanceof HTMLInputElement) &&
+        !(input instanceof HTMLTextAreaElement)
+      ) {
+        return;
+      }
+
+      const key = input.name;
+      if (!key) return;
+
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        input.value = data[key];
+      } else {
+        input.value = input.defaultValue;
+      }
+    });
+
+    // Update preview after setting data
+    updatePreview(getFormData());
+  }
 
   document.addEventListener("DOMContentLoaded", async () => {
-    const valueUnhashed = window.location.hash.replace("#", "");
-
-    if (!valueUnhashed) {
+    const hash = window.location.hash.replace("#", "");
+    if (!hash) {
+      updatePreview(getFormData());
       return;
     }
 
-    const valueDecompressed = await decompress(valueUnhashed);
-    if (noteElement) {
-      try {
-        noteElement.value = JSON.parse(decodeURI(valueDecompressed));
-      } catch (e) {
-        console.error("Failed to parse note content", e);
+    try {
+      const decompressed = await decompress(hash);
+      if (decompressed) {
+        const data = JSON.parse(decodeURI(decompressed));
+        setFormData(data);
       }
+    } catch (e) {
+      console.error("Failed to load state from URL:", e);
     }
   });
 
-  noteElement?.addEventListener("blur", async (event) => {
-    const target = event.target as HTMLTextAreaElement;
+  formElement?.addEventListener("input", async () => {
+    const data = getFormData();
 
-    if (!target) {
-      return;
+    // Update preview in real-time
+    updatePreview(data);
+
+    try {
+      const json = JSON.stringify(data);
+      const encoded = encodeURI(json);
+      const compressed = await compress(encoded);
+
+      // Update URL without reloading
+      history.replaceState(null, "", `#${compressed}`);
+    } catch (e) {
+      console.error("Failed to save state to URL:", e);
     }
-
-    const value = encodeURI(JSON.stringify(target.value));
-    const valueCompressed = await compress(value);
-
-    console.log(
-      "blur",
-      value,
-      value.length,
-      valueCompressed,
-      valueCompressed.length,
-    );
-
-    history.pushState(null, "", `#${valueCompressed}`);
   });
 </script>

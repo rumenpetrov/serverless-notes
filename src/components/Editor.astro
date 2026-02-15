@@ -1,0 +1,67 @@
+---
+
+---
+
+<div class="box">
+  <textarea id="note" placeholder="text here..."></textarea>
+</div>
+
+<style>
+  .box {
+    padding: 24px;
+  }
+
+  #note {
+    display: block;
+    width: 100%;
+    height: 50vh;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+</style>
+
+<script>
+  import decompress from "@utils/decompress";
+  import compress from "@utils/compress";
+
+  const noteElement = document.getElementById("note") as HTMLTextAreaElement;
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const valueUnhashed = window.location.hash.replace("#", "");
+
+    if (!valueUnhashed) {
+      return;
+    }
+
+    const valueDecompressed = await decompress(valueUnhashed);
+    if (noteElement) {
+      try {
+        noteElement.value = JSON.parse(decodeURI(valueDecompressed));
+      } catch (e) {
+        console.error("Failed to parse note content", e);
+      }
+    }
+  });
+
+  noteElement?.addEventListener("blur", async (event) => {
+    const target = event.target as HTMLTextAreaElement;
+
+    if (!target) {
+      return;
+    }
+
+    const value = encodeURI(JSON.stringify(target.value));
+    const valueCompressed = await compress(value);
+
+    console.log(
+      "blur",
+      value,
+      value.length,
+      valueCompressed,
+      valueCompressed.length,
+    );
+
+    history.pushState(null, "", `#${valueCompressed}`);
+  });
+</script>

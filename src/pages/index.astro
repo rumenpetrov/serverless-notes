@@ -1,53 +1,8 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import Editor from "@components/Editor.astro";
 ---
 
 <Layout>
-  <div class="box">
-    <textarea id="note" placeholder="text here..."></textarea>
-  </div>
+  <Editor />
 </Layout>
-
-<style>
-  .box {
-    padding: 24px;
-  }
-
-  #note {
-    display: block;
-    width: 100%;
-    height: 50vh;
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-</style>
-
-<script>
-  import decompress from "@utils/decompress";
-  import compress from "@utils/compress";
-
-  const noteElement = document.getElementById("note");
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    const valueUnhashed = window.location.hash.replace("#", "");
-    const valueDecompressed = await decompress(valueUnhashed);
-
-    noteElement.value = JSON.parse(decodeURI(valueDecompressed));
-  });
-
-  noteElement?.addEventListener("blur", async (event) => {
-    const value = encodeURI(JSON.stringify(event.target.value));
-    const valueCompressed = await compress(value);
-
-    console.log(
-      "blur",
-      value,
-      value.length,
-      valueCompressed,
-      valueCompressed.length,
-    );
-
-    history.pushState(null, null, `#${valueCompressed}`);
-  });
-</script>

@@ -87,11 +87,22 @@ const template = entry?.data;
 
   .preview-item {
     margin-bottom: 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
   }
 
   .preview-label {
     font-weight: bold;
-    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .preview-value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-grow: 1;
+    min-width: 0;
   }
 
   .field {

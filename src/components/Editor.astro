@@ -134,8 +134,7 @@ const template = entry?.data;
 </style>
 
 <script>
-  import decompress from "@utils/decompress";
-  import compress from "@utils/compress";
+  import Oreh from "@oreh/oreh";
 
   const formElement = document.getElementById("editor-form") as HTMLFormElement;
   const previewContent = document.getElementById("preview-content");
@@ -203,7 +202,7 @@ const template = entry?.data;
     }
 
     try {
-      const decompressed = await decompress(hash);
+      const decompressed = await Oreh.decompress(hash);
       if (decompressed) {
         const data = JSON.parse(decodeURI(decompressed));
         setFormData(data);
@@ -222,7 +221,7 @@ const template = entry?.data;
     try {
       const json = JSON.stringify(data);
       const encoded = encodeURI(json);
-      const compressed = await compress(encoded);
+      const compressed = await Oreh.compress(encoded);
 
       // Update URL without reloading
       history.replaceState(null, "", `#${compressed}`);

@@ -85,19 +85,19 @@ const template = entry?.data;
     color: #444;
   }
 
-  .preview-item {
+  :global(.preview-item) {
     margin-bottom: 8px;
     display: flex;
     align-items: baseline;
     gap: 8px;
   }
 
-  .preview-label {
+  :global(.preview-label) {
     font-weight: bold;
     flex-shrink: 0;
   }
 
-  .preview-value {
+  :global(.preview-value) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

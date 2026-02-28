@@ -21,8 +21,11 @@
       "@utils/*": [
         "./src/utils/*"
       ],
-      "@oreh/*": [
-        "./src/oreh/*"
+      "@oreh-sdk": [
+        "./src/oreh-sdk/index"
+      ],
+      "@oreh-sdk/*": [
+        "./src/oreh-sdk/*"
       ],
     },
   },

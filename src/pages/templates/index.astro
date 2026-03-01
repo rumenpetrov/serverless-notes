@@ -1,0 +1,23 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { createPath } from "@utils/astro";
+import { getCollection } from "astro:content";
+
+const templates = await getCollection("templates");
+---
+
+<Layout>
+  <h1>Available Templates</h1>
+  <ul>
+    {
+      templates.map((template) => (
+        <li>
+          <a href={createPath(`/templates/${template.id}`)}>
+            {template.data.title}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <a href={createPath("/")}>Back to Home</a>
+</Layout>

@@ -1,20 +1,10 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import { createPath } from "@utils/astro";
-import { getCollection } from "astro:content";
-
-const templates = await getCollection("templates");
 ---
 
 <Layout>
-  <h1>Available Templates</h1>
-  <ul>
-    {
-      templates.map((template) => (
-        <li>
-          <a href={createPath(template.id)}>{template.data.title}</a>
-        </li>
-      ))
-    }
-  </ul>
+  <h1>Home</h1>
+  <p>Welcome to Serverless Notes.</p>
+  <a href={createPath("/templates")}>View Templates</a>
 </Layout>

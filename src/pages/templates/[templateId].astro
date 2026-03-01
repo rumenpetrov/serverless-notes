@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Editor from "@components/Editor.astro";
+import { createPath } from "@utils/astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -14,5 +15,8 @@ const { templateId } = Astro.params;
 ---
 
 <Layout>
+  <nav>
+    <a href={createPath("/templates")}>&larr; Back to Templates</a>
+  </nav>
   <Editor templateId={templateId} />
 </Layout>

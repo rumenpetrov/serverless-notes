@@ -11,6 +11,8 @@ const entry = await getEntry("templates", templateId);
 const template = entry?.data;
 ---
 
+<div id="url-length-status"></div>
+
 <div class="box">
   {
     template && (
@@ -69,6 +71,33 @@ const template = entry?.data;
     padding: 24px;
     max-width: 800px;
     margin: 0 auto;
+  }
+
+  :global(#url-length-status) {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  :global(#url-length-status[data-status="ok"]) {
+    background: #e6f4ea;
+    color: #1e8e3e;
+  }
+
+  :global(#url-length-status[data-status="warning"]) {
+    background: #fef7e0;
+    color: #b06e00;
+  }
+
+  :global(#url-length-status[data-status="critical"]) {
+    background: #fce8e6;
+    color: #d93025;
   }
 
   .preview {
@@ -135,10 +164,19 @@ const template = entry?.data;
 
 <script>
   import { Oreh } from "@oreh-sdk";
+
   const oreh = new Oreh();
 
   const formElement = document.getElementById("editor-form") as HTMLFormElement;
   const previewContent = document.getElementById("preview-content");
+  const urlLengthStatusElement = document.getElementById("url-length-status");
+
+  function renderStateStatus() {
+    if (!urlLengthStatusElement) return;
+    const { currentLength, maxLength, status } = oreh.checkStateSize();
+    urlLengthStatusElement.textContent = `${currentLength} / ${maxLength} chars`;
+    urlLengthStatusElement.setAttribute("data-status", status);
+  }
 
   function renderPreview(data: Record<string, any>) {
     if (!previewContent) return;
@@ -156,12 +194,17 @@ const template = entry?.data;
   }
 
   function getFormData() {
-    if (!formElement) return {};
+    if (!formElement) {
+      return {};
+    }
+
     const formData = new FormData(formElement);
     const data: Record<string, any> = {};
+
     formData.forEach((value, key) => {
       data[key] = value;
     });
+
     return data;
   }
 
@@ -179,7 +222,10 @@ const template = entry?.data;
       }
 
       const key = input.name;
-      if (!key) return;
+
+      if (!key) {
+        return;
+      }
 
       if (Object.prototype.hasOwnProperty.call(data, key)) {
         input.value = data[key];
@@ -188,17 +234,19 @@ const template = entry?.data;
       }
     });
 
-    // Update preview after setting data
     renderPreview(getFormData());
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
     const initialState = await oreh.loadState();
+
     if (initialState) {
       setFormData(initialState);
     } else {
       renderPreview(getFormData());
     }
+
+    renderStateStatus();
   });
 
   formElement?.addEventListener("input", async () => {
@@ -207,5 +255,6 @@ const template = entry?.data;
     renderPreview(data);
 
     await oreh.saveState(data);
+    renderStateStatus();
   });
 </script>

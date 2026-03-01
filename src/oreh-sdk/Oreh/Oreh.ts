@@ -62,4 +62,33 @@ export default class Oreh {
             console.error("Failed to save state:", e);
         }
     }
+
+    checkStateSize() {
+        if (typeof window === "undefined") {
+            return {
+                currentLength: 0,
+                maxLength: 8000,
+                status: "ok" as const
+            };
+        }
+
+        // 8000 is a sensible maximum URL length that is safely supported by 
+        // the last 2 versions of all popular browsers (Chrome, Firefox, Safari, Edge).
+        const maxLength = 8000;
+        const currentLength = window.location.href.length;
+
+        let status: "ok" | "warning" | "critical" = "ok";
+
+        if (currentLength >= maxLength) {
+            status = "critical";
+        } else if (currentLength >= maxLength * 0.9) {
+            status = "warning";
+        }
+
+        return {
+            currentLength,
+            maxLength,
+            status
+        };
+    }
 }

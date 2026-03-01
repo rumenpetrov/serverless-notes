@@ -1,5 +1,7 @@
 export default class Oreh {
-    static async compress(string: string) {
+    constructor() { }
+
+    async compress(string: string) {
         const byteArray = new TextEncoder().encode(string);
         const stream = new CompressionStream("deflate-raw");
         const writer = stream.writable.getWriter();
@@ -12,7 +14,7 @@ export default class Oreh {
         return (new Uint8Array(buffer) as any).toBase64({ alphabet: "base64url" });
     }
 
-    static async decompress(b64: string) {
+    async decompress(b64: string) {
         const byteArray = (Uint8Array as any).fromBase64(b64, {
             alphabet: "base64url",
         });
@@ -25,5 +27,39 @@ export default class Oreh {
         const buffer = await new Response(stream.readable).arrayBuffer();
 
         return new TextDecoder().decode(buffer);
+    }
+
+    async loadState() {
+        if (typeof window === "undefined") return null;
+
+        const hash = window.location.hash.replace("#", "");
+        if (!hash) {
+            return null;
+        }
+
+        try {
+            const decompressed = await this.decompress(hash);
+            if (decompressed) {
+                return JSON.parse(decodeURI(decompressed));
+            }
+        } catch (e) {
+            console.error("Failed to load state:", e);
+        }
+
+        return null;
+    }
+
+    async saveState(data: Record<string, any>) {
+        if (typeof window === "undefined" || typeof history === "undefined") return;
+
+        try {
+            const json = JSON.stringify(data);
+            const encoded = encodeURI(json);
+            const compressed = await this.compress(encoded);
+
+            history.replaceState(null, "", `#${compressed}`);
+        } catch (e) {
+            console.error("Failed to save state:", e);
+        }
     }
 }

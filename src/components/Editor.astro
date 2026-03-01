@@ -135,23 +135,12 @@ const template = entry?.data;
 
 <script>
   import { Oreh } from "@oreh-sdk";
+  const oreh = new Oreh();
 
   const formElement = document.getElementById("editor-form") as HTMLFormElement;
   const previewContent = document.getElementById("preview-content");
 
-  // Function to gather form data
-  function getFormData() {
-    if (!formElement) return {};
-    const formData = new FormData(formElement);
-    const data: Record<string, any> = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
-    return data;
-  }
-
-  // Function to update preview
-  function updatePreview(data: Record<string, any>) {
+  function renderPreview(data: Record<string, any>) {
     if (!previewContent) return;
 
     previewContent.innerHTML = Object.entries(data)
@@ -166,7 +155,16 @@ const template = entry?.data;
       .join("");
   }
 
-  // Function to populate form data
+  function getFormData() {
+    if (!formElement) return {};
+    const formData = new FormData(formElement);
+    const data: Record<string, any> = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+    return data;
+  }
+
   function setFormData(data: Record<string, any>) {
     if (!formElement || !data) return;
 
@@ -191,42 +189,23 @@ const template = entry?.data;
     });
 
     // Update preview after setting data
-    updatePreview(getFormData());
+    renderPreview(getFormData());
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
-    const hash = window.location.hash.replace("#", "");
-    if (!hash) {
-      updatePreview(getFormData());
-      return;
-    }
-
-    try {
-      const decompressed = await Oreh.decompress(hash);
-      if (decompressed) {
-        const data = JSON.parse(decodeURI(decompressed));
-        setFormData(data);
-      }
-    } catch (e) {
-      console.error("Failed to load state from URL:", e);
+    const initialState = await oreh.loadState();
+    if (initialState) {
+      setFormData(initialState);
+    } else {
+      renderPreview(getFormData());
     }
   });
 
   formElement?.addEventListener("input", async () => {
     const data = getFormData();
 
-    // Update preview in real-time
-    updatePreview(data);
+    renderPreview(data);
 
-    try {
-      const json = JSON.stringify(data);
-      const encoded = encodeURI(json);
-      const compressed = await Oreh.compress(encoded);
-
-      // Update URL without reloading
-      history.replaceState(null, "", `#${compressed}`);
-    } catch (e) {
-      console.error("Failed to save state to URL:", e);
-    }
+    await oreh.saveState(data);
   });
 </script>

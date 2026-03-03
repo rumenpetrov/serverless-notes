@@ -238,10 +238,10 @@ const template = entry?.data;
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
-    const initialState = await oreh.loadState();
+    const { content } = await oreh.readState();
 
-    if (initialState) {
-      setFormData(initialState);
+    if (content) {
+      setFormData(content);
     } else {
       renderPreview(getFormData());
     }
@@ -254,7 +254,7 @@ const template = entry?.data;
 
     renderPreview(data);
 
-    await oreh.saveState(data);
+    await oreh.writeState({ content: data });
     renderStateStatus();
   });
 </script>

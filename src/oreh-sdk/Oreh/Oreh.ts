@@ -31,32 +31,37 @@ export default class Oreh {
     return new TextDecoder().decode(buffer);
   }
 
-  async loadState() {
+  async readState() {
     if (typeof window === "undefined") return null;
 
     const hash = window.location.hash.replace("#", "");
+    const fallback = {};
+
     if (!hash) {
-      return null;
+      return fallback;
     }
 
     try {
       const decompressed = await this.decompress(hash);
+
       if (decompressed) {
-        return JSON.parse(decodeURI(decompressed));
+        return JSON.parse(decodeURI(decompressed)) || fallback;
       }
     } catch (e) {
       console.error("Failed to load state:", e);
     }
 
-    return null;
+    return fallback;
   }
 
-  async saveState(data: Record<string, any>) {
+  async writeState(data: Record<string, any>) {
     if (typeof window === "undefined" || typeof history === "undefined") return;
     console.log("Saving state", data);
 
     try {
-      const json = JSON.stringify(data);
+      const json = JSON.stringify({
+        content: data?.content,
+      });
       const encoded = encodeURI(json);
       const compressed = await this.compress(encoded);
 

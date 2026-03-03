@@ -15,8 +15,208 @@ const { templateId } = Astro.params;
 ---
 
 <Layout>
-  <nav>
-    <a href={createPath("/templates")}>&larr; Back to Templates</a>
-  </nav>
-  <Editor templateId={templateId} />
+  <div id="url-length-status"></div>
+  <button id="mode-toggle"></button>
+
+  <div class="page-container">
+    <nav class="nav">
+      <a href={createPath("/templates")}>&larr; Back to Templates</a>
+    </nav>
+
+    <div id="preview" class="preview">
+      <h3>Preview</h3>
+      <div id="preview-content"></div>
+    </div>
+
+    <Editor id="editor" templateId={templateId} hidden="hidden" />
+  </div>
 </Layout>
+
+<style>
+  .page-container {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .nav {
+    margin-bottom: 24px;
+  }
+
+  #url-length-status {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #url-length-status[data-status="ok"] {
+    background: #e6f4ea;
+    color: #1e8e3e;
+  }
+
+  #url-length-status[data-status="warning"] {
+    background: #fef7e0;
+    color: #b06e00;
+  }
+
+  #url-length-status[data-status="critical"] {
+    background: #fce8e6;
+    color: #d93025;
+  }
+
+  #mode-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+    color: #666;
+  }
+
+  #mode-toggle:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+  }
+
+  #mode-toggle[data-mode="viewer"]::after {
+    content: "✎ Edit";
+  }
+
+  #mode-toggle[data-mode="editor"]::after {
+    content: "👁 View";
+  }
+
+  .preview {
+    margin-bottom: 32px;
+    padding: 24px;
+    border: 1px solid #e0e0e0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .page-container[data-mode="editor"] .preview {
+    border-style: dashed;
+    background: #fefefe;
+  }
+
+  .preview h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #444;
+  }
+
+  :global(.preview-item) {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  :global(.preview-label) {
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  :global(.preview-value) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-grow: 1;
+    min-width: 0;
+  }
+</style>
+
+<script>
+  import { Oreh } from "@oreh-sdk";
+
+  const oreh = new Oreh();
+  const previewContent = document.getElementById("preview-content");
+  const urlLengthStatusElement = document.getElementById("url-length-status");
+  const modeToggleElement = document.getElementById("mode-toggle");
+  const pageContainer = document.querySelector(".page-container");
+  const editorElement = document.getElementById("editor");
+
+  async function renderModeSwitch() {
+    const state = await oreh.readState();
+    const currentMode = state?.system?.mode || "viewer";
+
+    if (pageContainer) {
+      pageContainer.setAttribute("data-mode", currentMode);
+    }
+
+    if (modeToggleElement) {
+      modeToggleElement.setAttribute("data-mode", currentMode);
+    }
+
+    if (editorElement) {
+      editorElement.toggleAttribute("hidden", currentMode === "viewer");
+    }
+  }
+
+  modeToggleElement?.addEventListener("click", async () => {
+    const state = await oreh.readState();
+    const currentMode = state?.system?.mode || "viewer";
+    const nextMode = currentMode === "editor" ? "viewer" : "editor";
+
+    await oreh.setSystemState("mode", nextMode);
+    renderModeSwitch();
+  });
+
+  function renderStateStatus() {
+    if (!urlLengthStatusElement) return;
+    const { currentLength, maxLength, status } = oreh.checkStateSize();
+    urlLengthStatusElement.textContent = `${currentLength} / ${maxLength} chars`;
+    urlLengthStatusElement.setAttribute("data-status", status);
+  }
+
+  function renderPreview(data: Record<string, any>) {
+    if (!previewContent) return;
+
+    previewContent.innerHTML = Object.entries(data)
+      .map(
+        ([key, value]) => `
+        <div class="preview-item">
+          <span class="preview-label">${key}:</span>
+          <span class="preview-value">${value}</span>
+        </div>
+      `,
+      )
+      .join("");
+  }
+
+  // Listen for editor changes
+  window.addEventListener("editor:change", async (event: any) => {
+    const data = event.detail;
+    renderPreview(data);
+    await oreh.writeContentState(data);
+    renderStateStatus();
+  });
+
+  // Handle editor ready signal
+  window.addEventListener("editor:ready", async (event: any) => {
+    const { content } = await oreh.readState();
+    if (content) {
+      window.dispatchEvent(
+        new CustomEvent("editor:set-data", { detail: content }),
+      );
+      renderPreview(content);
+    } else {
+      // If no stored content, use the default data from the editor
+      renderPreview(event.detail);
+    }
+    renderStateStatus();
+    renderModeSwitch();
+  });
+</script>

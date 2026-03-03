@@ -45,7 +45,18 @@ export default class Oreh {
       const decompressed = await this.decompress(hash);
 
       if (decompressed) {
-        return JSON.parse(decodeURI(decompressed)) || fallback;
+        const systemStateDefaults = {
+          mode: "viewer",
+        };
+        const parsed = JSON.parse(decodeURI(decompressed)) || fallback;
+
+        return {
+          ...parsed,
+          system: {
+            ...systemStateDefaults,
+            ...parsed?.system,
+          },
+        };
       }
     } catch (e) {
       console.error("Failed to load state:", e);
@@ -54,13 +65,13 @@ export default class Oreh {
     return fallback;
   }
 
-  async writeState(data: Record<string, any>) {
+  async writeState(data: { content: Object, system: { mode: 'viewer' | 'editor' } }) {
     if (typeof window === "undefined" || typeof history === "undefined") return;
-    console.log("Saving state", data);
 
     try {
       const json = JSON.stringify({
         content: data?.content,
+        system: data?.system,
       });
       const encoded = encodeURI(json);
       const compressed = await this.compress(encoded);
@@ -69,6 +80,18 @@ export default class Oreh {
     } catch (e) {
       console.error("Failed to save state:", e);
     }
+  }
+
+  async writeContentState(content: Object) {
+    const state = await this.readState();
+
+    await this.writeState({ ...state, content });
+  }
+
+  async setSystemState(propertyName: string, value: any) {
+    const state = await this.readState();
+
+    await this.writeState({ ...state, system: { ...state?.system, [propertyName]: value } });
   }
 
   checkStateSize() {

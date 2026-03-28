@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Template preview</title>
+  <style>
+    body {
+      background-color: #f5f5f5;
+    }
+
+    .preview {
+      margin-bottom: 32px;
+      padding: 24px;
+      border: 1px solid #e0e0e0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .preview h1 {
+      margin-top: 0;
+      font-size: 1.2em;
+      color: #444;
+    }
+
+    .preview-item {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .preview-label {
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .preview-value {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-grow: 1;
+      min-width: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="preview">
+    <h1>Template preview</h1>
+
+    <div id="preview-content"></div>
+  </div>
+
+  <script>
+    function render() {
+      // Get params from hash (skip the #)
+      const hash = window.location.hash.slice(1);
+      const params = new URLSearchParams(hash);
+      const content = document.getElementById('preview-content');
+
+      if (!content) return;
+
+      content.innerHTML = '';
+
+      if ([...params].length === 0) {
+        content.innerHTML = '<p>No data provided in URL hash.</p>';
+
+        return;
+      }
+
+      for (const [key, value] of params) {
+        const div = document.createElement('div');
+        div.className = 'preview-item';
+        div.innerHTML = `
+          <div class="preview-label">${key}</div>
+          <div class="preview-value">${value}</div>
+        `;
+        content.appendChild(div);
+      }
+    }
+
+    render();
+
+    // Listen for hash changes to update without reloads
+    window.addEventListener('hashchange', render);
+
+    // Support popstate if hash manipulation causes history entry
+    window.addEventListener('popstate', render);
+  </script>
+</body>
+
+</html>

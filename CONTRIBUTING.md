@@ -1,21 +1,8 @@
-# Contributing
+# Contributing to the project
 
-Welcome to **Serverless Notes**! We are excited to have you contribute to this project.
+To maintain codebase consistency and quality, all contributions must adhere strictly to our core engineering standards:
 
-To maintain a high level of code quality and consistency, we follow specific standards that both human developers and AI agents should adhere to.
-
-## Getting Started
-
-Before you start contributing, please read the [README.md](README.md) to understand the project's purpose and how to set up your local development environment.
-
-## Naming Standards
-
-Consistency in naming is crucial for the readability and maintainability of our codebase. Please follow the naming conventions described in [Naming Standards](docs/standards/naming.md).
-
-## Code Style
-
-Our project uses specific code style and formatting rules. Ensure your changes follow the existing patterns and linting rules.
-
----
-
-Thank you for your contributions!
+1. **Get Started**: Review the [README.md](README.md) for project setup and general commands.
+2. **Development Rules**: Follow all coding, event protocols, and routing guidelines in the [Development Guide](docs/development-guide.md).
+3. **Naming Rules**: Strict kebab-case/PascalCase file conventions must be followed as defined in [Naming Standards](docs/standards/naming.md).
+4. **Style Philosophy**: Maintain the extreme minimalist styling approach described in [Design System](design-system.md).

@@ -1,34 +1,35 @@
-# Serverless notes
+# Serverless Notes
 
-[WIP] POC of app which uses the URL to store information instead of DB
+A Proof-of-Concept (POC) serverless note-taking and card application built with **Astro**. This project stores all data and application state **entirely within the URL hash** instead of a database, making notes private, serverless, and instantly shareable.
 
-## 🚀 Project Structure
+---
 
-Inside of your Astro project, you'll see the following folders and files:
+## 📖 Essential Documentation
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   ├── components
-│   ├── layouts
-│   └── pages
-└── package.json
+To prevent documentation drift, detailed specifications are kept in dediced files (single sources of truth). Please refer to:
+
+* **Core Architecture**: [docs/architecture.md](docs/architecture.md) — Explains the Zero-DB engine, Oreh SDK compression, and iframe reactive lifecycle.
+* **Development Guide**: [docs/development-guide.md](docs/development-guide.md) — Contains dynamic template layouts, event protocols, and the critical **`createPath`** routing standard.
+* **Naming Standards**: [docs/standards/naming.md](docs/standards/naming.md) — Strict project naming conventions.
+* **Styling Philosophy**: [design-system.md](design-system.md) — Intentional minimalist styling policies.
+* **AI Assistant Guidelines**: [.cursorrules](.cursorrules) — Enforced constraints for automated coding systems.
+
+---
+
+## 🚀 Quick Start
+
+Ensure you have [Node.js](https://nodejs.org/) installed.
+
+```bash
+# Install dependencies
+npm install
+
+# Start local development server (runs at localhost:4321)
+npm run dev
+
+# Compile the production application to `./dist/`
+npm run build
+
+# Preview your production build locally
+npm run preview
 ```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |

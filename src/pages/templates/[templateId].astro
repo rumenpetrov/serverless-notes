@@ -120,6 +120,7 @@ const { templateId } = Astro.params;
     onEditorEvent,
     type EditorData,
   } from "@utils/editor-events";
+  import { debounce } from "@utils/debounce";
 
   const oreh = new Oreh();
   const previewElement = document.getElementById("preview");
@@ -186,11 +187,22 @@ const { templateId } = Astro.params;
     }
   }
 
-  // Listen for editor changes
-  onEditorEvent("editor:change", async (data) => {
+  // Listen for editor changes. Buffer the latest data and flush on a debounce
+  // so we don't compress + rewrite the URL hash + rebuild the preview iframe
+  // on every single keystroke.
+  let pendingData: EditorData | null = null;
+
+  const flushEditorChange = debounce(400, () => {
+    if (!pendingData) return;
+    const data = pendingData;
+    pendingData = null;
     renderPreview(data);
-    await oreh.writeContentState(data);
-    renderStateStatus();
+    void oreh.writeContentState(data).then(renderStateStatus);
+  });
+
+  onEditorEvent("editor:change", (data) => {
+    pendingData = data;
+    flushEditorChange();
   });
 
   // Handle editor ready signal

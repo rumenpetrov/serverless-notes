@@ -32,6 +32,10 @@ Before making any code changes or writing documentation, you MUST read the prima
 * **Rule**: Do not add UI libraries, complex custom stylesheets, or utility CSS frameworks (such as Tailwind) unless explicitly requested by the user.
 * **Standard**: Keep CSS minimal and scoped within Astro/component files as explained in [design-system.md](design-system.md).
 
+### 3b. Theme Tokens Over Primitives
+* **Rule**: Never use primitive Open Props tokens (e.g. `--indigo-6`, `--gray-5`) or raw color values in component `<style>` blocks. Always use semantic theme tokens from `src/styles/theme.css` (e.g. `--link`, `--input-border`, `--status-ok-bg`).
+* **Mechanism**: Theme tokens use `light-dark()` for automatic light/dark adaptation. Do not write `[data-theme]` selectors.
+
 ### 4. Strict Naming Conventions
 * **Rule**: Follow [naming.md](docs/standards/naming.md) file naming rules strictly (PascalCase for components/classes, kebab-case for other files/folders).
 

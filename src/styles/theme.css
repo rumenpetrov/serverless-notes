@@ -1,0 +1,30 @@
+/* Semantic theme tokens — single source of truth for all component styling.
+ * Uses light-dark() for automatic light/dark adaptation without data-theme selectors.
+ * Components and pages MUST use these tokens, never primitive Open Props or raw colors. */
+
+:root {
+  /* Links */
+  --link: light-dark(var(--indigo-6), var(--indigo-3));
+  --link-hover: light-dark(var(--indigo-8), var(--indigo-1));
+
+  /* Status indicators */
+  --status-ok-bg: light-dark(#e6f4ea, #1e3a2e);
+  --status-ok-text: light-dark(#1e8e3e, #7dd389);
+  --status-warning-bg: light-dark(#fef7e0, #3e2e00);
+  --status-warning-text: light-dark(#b06e00, #f0b34b);
+  --status-critical-bg: light-dark(#fce8e6, #3e1a18);
+  --status-critical-text: light-dark(#d93025, #f28b82);
+
+  /* Inputs */
+  --input-border: light-dark(var(--gray-5), var(--gray-7));
+  --input-border-focus: light-dark(var(--indigo-5), var(--indigo-4));
+
+  /* Surfaces */
+  --surface-raised: light-dark(white, var(--surface-3));
+  --surface-raised-hover: light-dark(var(--gray-1), var(--surface-4));
+  --border-muted: light-dark(var(--gray-4), var(--gray-7));
+  --text-muted: light-dark(var(--gray-6), var(--gray-3));
+
+  /* Preview */
+  --preview-bg: light-dark(#fefefe, var(--surface-2));
+}

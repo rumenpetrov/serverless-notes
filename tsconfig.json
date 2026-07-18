@@ -26,6 +26,9 @@
       ],
       "@oreh-sdk/*": [
         "./src/oreh-sdk/*"
+      ],
+      "@styles/*": [
+        "./src/styles/*"
       ]
     },
     "jsx": "react-jsx",

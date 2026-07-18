@@ -1,10 +1,54 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { createPath } from "@utils/astro";
+import Text from "@components/Text.astro";
+import TextLink from "@components/TextLink.astro";
 ---
 
 <Layout>
-  <h1>Home</h1>
-  <p>Welcome to Serverless Notes.</p>
-  <a href={createPath("/templates")}>View Templates</a>
+  <main class="container animate-fade-in">
+    <h1>Home</h1>
+    <Text>Welcome to Serverless Notes.</Text>
+    <TextLink href="/templates" class="home-link">View Templates</TextLink>
+  </main>
 </Layout>
+
+<style>
+  .container {
+    max-width: var(--size-content-3);
+    margin-inline: auto;
+    padding: var(--size-8) var(--size-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-3);
+  }
+
+  h1 {
+    font-size: var(--font-size-6);
+    font-weight: var(--font-weight-8);
+    color: var(--text-1);
+    margin: 0;
+  }
+
+  p {
+    font-size: var(--font-size-2);
+    color: var(--text-2);
+    margin: 0;
+    line-height: var(--font-lineheight-3);
+  }
+
+  .home-link {
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: var(--size-2);
+  }
+
+  .animate-fade-in {
+    animation: var(--animation-fade-in) 0.5s var(--ease-3) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in {
+      animation: none;
+    }
+  }
+</style>

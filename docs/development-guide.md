@@ -69,3 +69,14 @@ The parent page (`[templateId].astro`) and the [Editor.astro](file:///var/home/r
 3. **`editor:change`** (Fired by: `Editor.astro` on form input)
    * *Payload*: `detail` contains current key-value pairs of the form.
    * *Purpose*: Prompts the parent layout to compress data, save to the URL hash, and refresh the preview iframe.
+
+---
+
+## 🎨 Styling
+
+All styling in this project is governed by the rules documented in [design-system.md](../design-system.md). The key points relevant to development are:
+
+* **Open Props** is loaded globally via CDN in `Layout.astro`. Use its CSS custom properties (e.g. `var(--size-3)`, `var(--text-2)`, `var(--shadow-2)`) instead of hardcoded values in any component `<style>` block.
+* **Theme tokens** from `src/styles/theme.css` provide semantic aliases (e.g. `--link`, `--input-border`) that adapt automatically to light/dark mode via `light-dark()`. **Always prefer theme tokens over primitive Open Props tokens** when a semantic equivalent exists.
+* **No `data-theme` selectors** — `light-dark()` handles both themes automatically.
+* Keep styles **minimal and scoped** — add only what is needed for readability or usability, placed in the component's own `<style>` block.

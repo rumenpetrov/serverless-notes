@@ -1,0 +1,75 @@
+---
+type Variant = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
+
+interface Props {
+  variant?: Variant;
+  as?: Variant;
+  [key: string]: any;
+}
+
+const { variant = "p", as, ...rest } = Astro.props;
+
+const Tag = as ?? variant;
+---
+
+<Tag class={variant} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .h1 {
+    font-size: var(--font-size-8);
+    font-weight: var(--font-weight-9);
+    line-height: var(--font-lineheight-1);
+    color: var(--text-1);
+    margin: 0;
+  }
+
+  .h2 {
+    font-size: var(--font-size-6);
+    font-weight: var(--font-weight-8);
+    line-height: var(--font-lineheight-1);
+    color: var(--text-1);
+    margin: 0;
+  }
+
+  .h3 {
+    font-size: var(--font-size-5);
+    font-weight: var(--font-weight-7);
+    line-height: var(--font-lineheight-2);
+    color: var(--text-1);
+    margin: 0;
+  }
+
+  .h4 {
+    font-size: var(--font-size-4);
+    font-weight: var(--font-weight-7);
+    line-height: var(--font-lineheight-2);
+    color: var(--text-1);
+    margin: 0;
+  }
+
+  .h5 {
+    font-size: var(--font-size-3);
+    font-weight: var(--font-weight-6);
+    line-height: var(--font-lineheight-3);
+    color: var(--text-2);
+    margin: 0;
+  }
+
+  .h6 {
+    font-size: var(--font-size-2);
+    font-weight: var(--font-weight-6);
+    line-height: var(--font-lineheight-3);
+    color: var(--text-2);
+    margin: 0;
+  }
+
+  .p {
+    font-size: var(--font-size-2);
+    font-weight: var(--font-weight-4);
+    line-height: var(--font-lineheight-3);
+    color: var(--text-2);
+    margin: 0;
+  }
+</style>

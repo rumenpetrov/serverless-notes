@@ -65,18 +65,18 @@ const { templateId } = Astro.params;
   }
 
   #url-length-status[data-status="ok"] {
-    background: #e6f4ea;
-    color: #1e8e3e;
+    background: var(--status-ok-bg);
+    color: var(--status-ok-text);
   }
 
   #url-length-status[data-status="warning"] {
-    background: #fef7e0;
-    color: #b06e00;
+    background: var(--status-warning-bg);
+    color: var(--status-warning-text);
   }
 
   #url-length-status[data-status="critical"] {
-    background: #fce8e6;
-    color: #d93025;
+    background: var(--status-critical-bg);
+    color: var(--status-critical-text);
   }
 
   #mode-toggle {
@@ -87,15 +87,15 @@ const { templateId } = Astro.params;
     border-radius: 4px;
     font-size: 14px;
     z-index: 1000;
-    border: 1px solid #ddd;
-    background: white;
+    border: 1px solid var(--border-muted);
+    background: var(--surface-raised);
     cursor: pointer;
-    color: #666;
+    color: var(--text-muted);
   }
 
   #mode-toggle:hover {
-    background: #f5f5f5;
-    border-color: #ccc;
+    background: var(--surface-raised-hover);
+    border-color: var(--border-muted);
   }
 
   [data-mode="viewer"] #mode-toggle::after {
@@ -108,7 +108,7 @@ const { templateId } = Astro.params;
 
   .page-container[data-mode="editor"] .preview {
     border-style: dashed;
-    background: #fefefe;
+    background: var(--preview-bg);
   }
 
   .page-container[data-mode="viewer"] .preview {

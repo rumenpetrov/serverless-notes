@@ -1,0 +1,14 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { createPath } from "@utils/astro";
+
+interface Props extends HTMLAttributes<"a"> {
+  href: string;
+}
+
+const { href, ...rest } = Astro.props;
+---
+
+<a href={createPath(href)} {...rest}>
+  <slot />
+</a>

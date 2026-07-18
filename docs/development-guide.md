@@ -22,6 +22,9 @@ import { createPath } from "@utils/astro";
 <!-- Example Link -->
 <a href={createPath("/templates")}>View Templates</a>
 
+<!-- Realistic link -->
+<TextLink href="/tempaltes">View Templates</Link>
+
 <!-- Example Iframe Source -->
 <iframe src={createPath("/template-index-fallback.html")}></iframe>
 ```

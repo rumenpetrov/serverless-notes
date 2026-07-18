@@ -1,27 +1,31 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import TextLink from "@components/TextLink.astro";
-import { createPath } from "@utils/astro";
 import { getCollection } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+import Text from "@components/Text.astro";
+import TextLink from "@components/TextLink.astro";
+import Link from "@components/Link.astro";
+import Button from "@components/Button.astro";
 
 const templates = await getCollection("templates");
 ---
 
 <Layout>
   <main class="container">
-    <h1>Available Templates</h1>
-    <ul>
-      {
-        templates.map((template) => (
-          <li>
-            <a href={createPath(`/templates/${template.id}`)}>
-              {template.data.title}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
     <TextLink href="/" class="back-link">Back to Home</TextLink>
+
+    <Text variant="h1">Available Templates</Text>
+
+    {
+      templates.map((template) => (
+        <Button
+          variant="secondary"
+          as={Link}
+          href={`/templates/${template.id}`}
+        >
+          {template.data.title}
+        </Button>
+      ))
+    }
   </main>
 </Layout>
 
@@ -29,48 +33,9 @@ const templates = await getCollection("templates");
   .container {
     max-width: var(--size-content-3);
     margin-inline: auto;
-    padding: var(--size-8) var(--size-5);
+    padding: var(--size-8) 0;
     display: flex;
     flex-direction: column;
     gap: var(--size-3);
-  }
-
-  h1 {
-    font-size: var(--font-size-6);
-    font-weight: var(--font-weight-8);
-    color: var(--text-1);
-    margin: 0;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--size-1);
-  }
-
-  li a {
-    display: block;
-    padding: var(--size-2) var(--size-3);
-    border-radius: var(--radius-2);
-    color: var(--text-1);
-    text-decoration: none;
-    font-size: var(--font-size-2);
-    transition:
-      background-color 0.15s var(--ease-3),
-      color 0.15s var(--ease-3);
-  }
-
-  li a:hover {
-    background-color: var(--surface-2);
-    color: var(--text-1);
-  }
-
-  .back-link {
-    display: inline-block;
-    align-self: flex-start;
-    margin-top: var(--size-2);
   }
 </style>

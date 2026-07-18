@@ -27,4 +27,13 @@
 
   /* Preview */
   --preview-bg: light-dark(#fefefe, var(--surface-2));
+
+  /* Buttons */
+  --button-primary-bg: light-dark(var(--indigo-6), var(--indigo-4));
+  --button-primary-bg-hover: light-dark(var(--indigo-7), var(--indigo-3));
+  --button-primary-text: contrast-color(var(--button-primary-bg));
+  --button-secondary-bg: light-dark(transparent, transparent);
+  --button-secondary-bg-hover: var(--surface-raised-hover);
+  --button-secondary-border: var(--input-border);
+  --button-secondary-text: var(--text-1);
 }

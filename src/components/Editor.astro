@@ -1,5 +1,6 @@
 ---
 import { getEntry } from "astro:content";
+import Text from "@components/Text.astro";
 
 interface Props {
   templateId: string;
@@ -18,10 +19,11 @@ const template = entry?.data;
     template && (
       <>
         <header>
-          <h1>
+          <Text variant="h1">
             {template.title} - <span>v{template.version}</span>
-          </h1>
-          <p>{template.description}</p>
+          </Text>
+
+          <Text>{template.description}</Text>
         </header>
 
         <form id="editor-form">

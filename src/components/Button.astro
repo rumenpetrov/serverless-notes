@@ -1,0 +1,57 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props {
+  variant?: "primary" | "secondary";
+  as?: keyof HTMLElementTagNameMap;
+  type?: "button" | "submit" | "reset";
+  class?: string;
+  [key: string]: any;
+}
+
+const { variant = "primary", as, class: className, type = "button", ...rest } = Astro.props;
+
+const Tag = as ?? "button";
+const isButton = Tag === "button";
+---
+
+<Tag class:list={["button", variant, className]} {...rest} type={isButton ? type : undefined}>
+  <slot />
+</Tag>
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--size-2);
+    padding: var(--size-2) var(--size-4);
+    border: 1px solid transparent;
+    border-radius: var(--radius-2);
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-6);
+    line-height: var(--font-lineheight-1);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s var(--ease-3), border-color 0.15s var(--ease-3);
+  }
+
+  .primary {
+    background: var(--button-primary-bg);
+    color: var(--button-primary-text);
+  }
+
+  .primary:hover {
+    background: var(--button-primary-bg-hover);
+  }
+
+  .secondary {
+    background: var(--button-secondary-bg);
+    border-color: var(--button-secondary-border);
+    color: var(--button-secondary-text);
+  }
+
+  .secondary:hover {
+    background: var(--button-secondary-bg-hover);
+  }
+</style>

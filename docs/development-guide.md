@@ -61,17 +61,37 @@ The JSON format must conform to the schema defined in [content.config.ts](file:/
 
 ## ⚡ Custom Window Events
 
-The parent page (`[templateId].astro`) and the [Editor.astro](file:///var/home/rumen/storage/projects/web/serverless-notes/src/components/Editor.astro) component communicate using decoupled standard DOM custom events:
+The parent page (`[templateId].astro`) and the [Editor.astro](file:///var/home/rumen/storage/projects/web/serverless-notes/src/components/Editor.astro) component communicate using decoupled standard DOM custom events. **All event names and payload shapes are defined in a single typed module:** [editor-events.ts](file:///var/home/rumen/storage/projects/web/serverless-notes/src/utils/editor-events.ts).
+
+Import the helpers instead of dispatching raw `CustomEvent`s:
+
+```ts
+import { emitEditorEvent, onEditorEvent, type EditorData } from "@utils/editor-events";
+
+// Emit
+emitEditorEvent("editor:change", data);
+
+// Listen (returns an unsubscribe fn)
+const off = onEditorEvent("editor:set-data", (data) => {
+  setFormData(data);
+});
+```
+
+The three events are:
 
 1. **`editor:ready`** (Fired by: `Editor.astro` on mount)
-   * *Payload*: `detail` contains default key-value pairs from the form.
+   * *Payload*: `EditorData` — default key-value pairs from the form.
    * *Purpose*: Tells the parent layout to load existing content state or fallback to default values.
 2. **`editor:set-data`** (Fired by: `[templateId].astro` parent)
-   * *Payload*: `detail` contains the decompressed content object.
+   * *Payload*: `EditorData` — the decompressed content object.
    * *Purpose*: Instructs the editor fields to populate with the active state.
 3. **`editor:change`** (Fired by: `Editor.astro` on form input)
-   * *Payload*: `detail` contains current key-value pairs of the form.
+   * *Payload*: `EditorData` — current key-value pairs of the form.
    * *Purpose*: Prompts the parent layout to compress data, save to the URL hash, and refresh the preview iframe.
+
+### Initialization handshake
+
+Both scripts are deferred ES modules, so their evaluation order is not guaranteed. To avoid the host missing `editor:ready`, the host fires **`host:request-data`** (payload `null`) immediately after registering its listeners; `Editor.astro` replies by re-firing `editor:ready`. This makes initialization order-independent.
 
 ---
 

@@ -97,24 +97,28 @@ const template = entry?.data;
 </style>
 
 <script>
-  const formElement = document.getElementById("editor-form") as HTMLFormElement;
+  import { emitEditorEvent, onEditorEvent } from "@utils/editor-events";
 
-  function getFormData() {
+  const formElement = document.getElementById(
+    "editor-form",
+  ) as HTMLFormElement | null;
+
+  function getFormData(): Record<string, string> {
     if (!formElement) {
       return {};
     }
 
     const formData = new FormData(formElement);
-    const data: Record<string, any> = {};
+    const data: Record<string, string> = {};
 
     formData.forEach((value, key) => {
-      data[key] = value;
+      data[key] = String(value);
     });
 
     return data;
   }
 
-  function setFormData(data: Record<string, any>) {
+  function setFormData(data: Record<string, string>) {
     if (!formElement || !data) return;
 
     Array.from(formElement.elements).forEach((element) => {
@@ -142,20 +146,23 @@ const template = entry?.data;
   }
 
   // Handle data updates from outside
-  window.addEventListener("editor:set-data", (event: any) => {
-    setFormData(event.detail);
+  onEditorEvent("editor:set-data", (data) => {
+    setFormData(data);
+  });
+
+  // Respond to a late-registering host that missed editor:ready
+  onEditorEvent("host:request-data", () => {
+    emitEditorEvent("editor:ready", getFormData());
   });
 
   // Notify outside about changes
   formElement?.addEventListener("input", () => {
     const data = getFormData();
-    window.dispatchEvent(new CustomEvent("editor:change", { detail: data }));
+    emitEditorEvent("editor:change", data);
   });
 
-  // Signal that the editor is ready and request initial data if available
-  document.addEventListener("DOMContentLoaded", () => {
-    window.dispatchEvent(
-      new CustomEvent("editor:ready", { detail: getFormData() }),
-    );
-  });
+  // Signal that the editor is ready and request initial data if available.
+  // Fires on init; if the host registered late it will reply via
+  // host:request-data, which re-fires editor:ready.
+  emitEditorEvent("editor:ready", getFormData());
 </script>

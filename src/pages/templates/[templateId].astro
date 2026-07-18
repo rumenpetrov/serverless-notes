@@ -115,6 +115,11 @@ const { templateId } = Astro.params;
 
 <script>
   import { Oreh } from "@oreh-sdk";
+  import {
+    emitEditorEvent,
+    onEditorEvent,
+    type EditorData,
+  } from "@utils/editor-events";
 
   const oreh = new Oreh();
   const previewElement = document.getElementById("preview");
@@ -157,7 +162,7 @@ const { templateId } = Astro.params;
     ?.split("#")[0]
     ?.split("?")[0];
 
-  function renderPreview(data: Record<string, any>) {
+  function renderPreview(data: EditorData) {
     if (
       !previewElement ||
       !(previewElement instanceof HTMLIFrameElement) ||
@@ -182,26 +187,27 @@ const { templateId } = Astro.params;
   }
 
   // Listen for editor changes
-  window.addEventListener("editor:change", async (event: any) => {
-    const data = event.detail;
+  onEditorEvent("editor:change", async (data) => {
     renderPreview(data);
     await oreh.writeContentState(data);
     renderStateStatus();
   });
 
   // Handle editor ready signal
-  window.addEventListener("editor:ready", async (event: any) => {
+  onEditorEvent("editor:ready", async (event) => {
     const { content } = await oreh.readState();
     if (content) {
-      window.dispatchEvent(
-        new CustomEvent("editor:set-data", { detail: content }),
-      );
-      renderPreview(content);
+      emitEditorEvent("editor:set-data", content as EditorData);
+      renderPreview(content as EditorData);
     } else {
       // If no stored content, use the default data from the editor
-      renderPreview(event.detail);
+      renderPreview(event);
     }
     renderStateStatus();
     renderModeSwitch();
   });
+
+  // The editor may have fired editor:ready before this script registered its
+  // listeners. Ask it to re-announce so we never miss the initial data.
+  emitEditorEvent("host:request-data", null);
 </script>

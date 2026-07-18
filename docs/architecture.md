@@ -53,22 +53,22 @@ The application decouples the editing controls from the template preview using a
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Editor as Editor.astro (Host)
-    participant Host as [templateId].astro (Host)
+    participant Editor as Editor.astro (same document)
+    participant Host as [templateId].astro (same document)
     participant Iframe as template-index-fallback.html (Preview)
 
     Note over Host: Reads URL Hash & Decodes State
-    Editor->>Host: DOM CustomEvent ("editor:ready")
-    Host->>Editor: DOM CustomEvent ("editor:set-data", state.content)
+    Editor->>Host: editor-events.ts ("editor:ready")
+    Host->>Editor: editor-events.ts ("editor:set-data", state.content)
     Note over Editor: Populates Form Inputs
     Host->>Iframe: Updates iframe.src with URL Hash Params
     Note over Iframe: Decodes Params & Renders View
 
     Note over Editor: User inputs data
-    Editor->>Host: DOM CustomEvent ("editor:change", newContent)
+    Editor->>Host: editor-events.ts ("editor:change", newContent)
     Host->>Host: Compresses state & updates Parent Hash
     Host->>Iframe: Updates iframe.src (Hash Params)
     Note over Iframe: Re-renders Preview (hashchange listener)
 ```
 
-Refer to the [Development Guide](development-guide.md) for technical specifications of these custom events.
+> Note: `Editor.astro` and `[templateId].astro` live in the **same document**; they communicate via the typed bus in [editor-events.ts](file:///var/home/rumen/storage/projects/web/serverless-notes/src/utils/editor-events.ts). Only the preview iframe is a separate document.

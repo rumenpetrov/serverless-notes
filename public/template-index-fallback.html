@@ -74,10 +74,16 @@
       for (const [key, value] of params) {
         const div = document.createElement('div');
         div.className = 'preview-item';
-        div.innerHTML = `
-          <div class="preview-label">${key}</div>
-          <div class="preview-value">${value}</div>
-        `;
+
+        const label = document.createElement('div');
+        label.className = 'preview-label';
+        label.textContent = key;
+
+        const val = document.createElement('div');
+        val.className = 'preview-value';
+        val.textContent = value;
+
+        div.append(label, val);
         content.appendChild(div);
       }
     }

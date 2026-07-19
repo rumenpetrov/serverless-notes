@@ -42,19 +42,13 @@ const { templateId } = Astro.params;
     margin: 0 auto;
   }
 
-  .page-container[data-mode="viewer"] #url-length-status {
-    display: none;
-  }
-
-  .page-container[data-mode="viewer"] .nav {
-    display: none;
-  }
-
   .nav {
+    display: none;
     margin-bottom: 24px;
   }
 
   #url-length-status {
+    display: none;
     position: fixed;
     bottom: 16px;
     left: 16px;
@@ -96,20 +90,22 @@ const { templateId } = Astro.params;
     content: "👁 View";
   }
 
-  .page-container[data-mode="editor"] .preview {
-    border-style: dashed;
-    background: var(--preview-bg);
-  }
-
-  .page-container[data-mode="viewer"] .preview {
-    height: 100vh;
-  }
-
   .preview {
     display: block;
     width: 100%;
-    height: 400px;
+    height: 100vh;
     border: none;
+  }
+
+  .page-container[data-mode="editor"] .preview {
+    border-style: dashed;
+    height: 400px;
+    background: var(--preview-bg);
+  }
+
+  .page-container[data-mode="editor"] #url-length-status,
+  .page-container[data-mode="editor"] .nav {
+    display: block;
   }
 </style>
 

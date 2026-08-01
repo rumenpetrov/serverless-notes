@@ -48,7 +48,7 @@ export default class Oreh {
         const systemStateDefaults = {
           mode: "viewer",
         };
-        const parsed = JSON.parse(decodeURI(decompressed)) || fallback;
+        const parsed = JSON.parse(decompressed) || fallback;
 
         return {
           ...parsed,
@@ -73,8 +73,7 @@ export default class Oreh {
         content: data?.content,
         system: data?.system,
       });
-      const encoded = encodeURI(json);
-      const compressed = await this.compress(encoded);
+      const compressed = await this.compress(json);
 
       history.replaceState(null, "", `#${compressed}`);
     } catch (e) {

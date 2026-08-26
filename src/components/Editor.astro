@@ -35,9 +35,8 @@ const template = entry?.data;
                   name={field.name}
                   id={field.name}
                   placeholder={field.defaultValue}
-                >
-                  {field.defaultValue}
-                </textarea>
+                  set:text={field.defaultValue}
+                ></textarea>
               ) : field.type === "number" ? (
                 <input
                   type="number"

@@ -1,28 +1,58 @@
 ---
-type Variant = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
+type Variant =
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "p"
+  | "lead"
+  | "caption"
+  | "muted";
 
 interface Props {
   variant?: Variant;
-  as?: Variant;
+  as?: any;
+  class?: string;
   [key: string]: any;
 }
 
-const { variant = "p", as, ...rest } = Astro.props;
+const { variant = "p", as, class: className, ...rest } = Astro.props;
 
-const Tag = as ?? variant;
+// Default HTML tags for each variant
+const defaultTagMap: Record<Variant, string> = {
+  h1: "h1",
+  h2: "h2",
+  h3: "h3",
+  h4: "h4",
+  h5: "h5",
+  h6: "h6",
+  p: "p",
+  lead: "p",
+  caption: "span",
+  muted: "p",
+};
+
+const Tag = as ?? defaultTagMap[variant] ?? "p";
 ---
 
-<Tag class={variant} {...rest}>
+<Tag class:list={["text", variant, className]} {...rest}>
   <slot />
 </Tag>
 
 <style>
+  .text {
+    margin: 0;
+    font-family: inherit;
+  }
+
   .h1 {
     font-size: var(--font-size-8);
     font-weight: var(--font-weight-9);
     line-height: var(--font-lineheight-1);
     color: var(--text-1);
-    margin: 0;
+    letter-spacing: -0.02em;
   }
 
   .h2 {
@@ -30,7 +60,7 @@ const Tag = as ?? variant;
     font-weight: var(--font-weight-8);
     line-height: var(--font-lineheight-1);
     color: var(--text-1);
-    margin: 0;
+    letter-spacing: -0.01em;
   }
 
   .h3 {
@@ -38,7 +68,6 @@ const Tag = as ?? variant;
     font-weight: var(--font-weight-7);
     line-height: var(--font-lineheight-2);
     color: var(--text-1);
-    margin: 0;
   }
 
   .h4 {
@@ -46,7 +75,6 @@ const Tag = as ?? variant;
     font-weight: var(--font-weight-7);
     line-height: var(--font-lineheight-2);
     color: var(--text-1);
-    margin: 0;
   }
 
   .h5 {
@@ -54,7 +82,6 @@ const Tag = as ?? variant;
     font-weight: var(--font-weight-6);
     line-height: var(--font-lineheight-3);
     color: var(--text-2);
-    margin: 0;
   }
 
   .h6 {
@@ -62,7 +89,6 @@ const Tag = as ?? variant;
     font-weight: var(--font-weight-6);
     line-height: var(--font-lineheight-3);
     color: var(--text-2);
-    margin: 0;
   }
 
   .p {
@@ -70,6 +96,26 @@ const Tag = as ?? variant;
     font-weight: var(--font-weight-4);
     line-height: var(--font-lineheight-3);
     color: var(--text-2);
-    margin: 0;
+  }
+
+  .lead {
+    font-size: var(--font-size-3);
+    font-weight: var(--font-weight-4);
+    line-height: var(--font-lineheight-3);
+    color: var(--text-1);
+  }
+
+  .caption {
+    font-size: var(--font-size-0);
+    font-weight: var(--font-weight-4);
+    line-height: var(--font-lineheight-2);
+    color: var(--text-muted);
+  }
+
+  .muted {
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-4);
+    line-height: var(--font-lineheight-3);
+    color: var(--text-muted);
   }
 </style>

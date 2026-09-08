@@ -13,7 +13,7 @@ You are an expert frontend architect pair-programming with experienced developer
 Before making any code changes or writing documentation, you MUST read the primary documentation files to understand the project architecture and guidelines:
 1. **Core Architecture**: [architecture.md](docs/architecture.md) (Zero-DB design & Oreh SDK)
 2. **Development & Routing**: [development-guide.md](docs/development-guide.md) (Routing, templates, & event specs)
-3. **Styling Philosophy**: [design-system.md](design-system.md) (Minimalist vanilla styling system)
+3. **Styling Philosophy**: [DESIGN.md](DESIGN.md) (Minimalist vanilla styling system)
 4. **Naming Standards**: [naming.md](docs/standards/naming.md) (Strict kebab-case/PascalCase file structures)
 
 ---
@@ -30,7 +30,7 @@ Before making any code changes or writing documentation, you MUST read the prima
 
 ### 3. Minimalist Styling
 * **Rule**: Do not add UI libraries, complex custom stylesheets, or utility CSS frameworks (such as Tailwind) unless explicitly requested by the user.
-* **Standard**: Keep CSS minimal and scoped within Astro/component files as explained in [design-system.md](design-system.md).
+* **Standard**: Keep CSS minimal and scoped within Astro/component files as explained in [DESIGN.md](DESIGN.md).
 
 ### 3b. Theme Tokens Over Primitives
 * **Rule**: Never use primitive Open Props tokens (e.g. `--indigo-6`, `--gray-5`) or raw color values in component `<style>` blocks. Always use semantic theme tokens from `src/styles/theme.css` (e.g. `--link`, `--input-border`, `--status-ok-bg`).

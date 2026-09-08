@@ -1,0 +1,89 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"input"> {
+  size?: "sm" | "md" | "lg";
+  isError?: boolean;
+  class?: string;
+  type?: string;
+}
+
+const {
+  size = "md",
+  isError = false,
+  class: className,
+  type = "text",
+  ...rest
+} = Astro.props;
+---
+
+<input
+  type={type}
+  class:list={["input", `size-${size}`, { "has-error": isError }, className]}
+  {...rest}
+/>
+
+<style>
+  .input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    color: var(--input-text);
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-control);
+    line-height: var(--font-lineheight-2);
+    transition:
+      border-color 0.15s var(--ease-3),
+      box-shadow 0.15s var(--ease-3);
+  }
+
+  .input::placeholder {
+    color: var(--input-placeholder);
+  }
+
+  .input:hover:not(:disabled) {
+    border-color: var(--input-border-hover);
+  }
+
+  .input:focus-visible {
+    outline: none;
+    border-color: var(--input-border-focus);
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring);
+  }
+
+  .input:disabled {
+    background-color: var(--input-disabled-bg);
+    border-color: var(--input-disabled-border);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.75;
+  }
+
+  /* Sizes */
+  .size-sm {
+    padding: var(--size-1) var(--size-2);
+    font-size: var(--font-size-0);
+  }
+
+  .size-md {
+    padding: var(--size-2) var(--size-3);
+    font-size: var(--font-size-1);
+  }
+
+  .size-lg {
+    padding: var(--size-3) var(--size-4);
+    font-size: var(--font-size-2);
+  }
+
+  /* Error state */
+  .has-error {
+    border-color: var(--status-critical-text);
+  }
+
+  .has-error:focus-visible {
+    border-color: var(--status-critical-text);
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--status-critical-border);
+  }
+</style>

@@ -97,7 +97,7 @@ Both scripts are deferred ES modules, so their evaluation order is not guarantee
 
 ## 🎨 Styling
 
-All styling in this project is governed by the rules documented in [design-system.md](../design-system.md). The key points relevant to development are:
+All styling in this project is governed by the rules documented in [DESIGN.md](../DESIGN.md). The key points relevant to development are:
 
 * **Open Props** is loaded globally via CDN in `Layout.astro`. Use its CSS custom properties (e.g. `var(--size-3)`, `var(--text-2)`, `var(--shadow-2)`) instead of hardcoded values in any component `<style>` block.
 * **Theme tokens** from `src/styles/theme.css` provide semantic aliases (e.g. `--link`, `--input-border`) that adapt automatically to light/dark mode via `light-dark()`. **Always prefer theme tokens over primitive Open Props tokens** when a semantic equivalent exists.

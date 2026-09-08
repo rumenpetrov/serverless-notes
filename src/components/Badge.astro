@@ -1,0 +1,74 @@
+---
+interface Props {
+  variant?: "ok" | "warning" | "critical" | "info" | "neutral";
+  size?: "sm" | "md";
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = "neutral",
+  size = "md",
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<span class:list={["badge", variant, `size-${size}`, className]} {...rest}>
+  <slot />
+</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-6);
+    border-radius: var(--radius-badge);
+    border: 1px solid transparent;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* Sizes */
+  .size-sm {
+    padding: var(--size-1) var(--size-2);
+    font-size: var(--font-size-00);
+  }
+
+  .size-md {
+    padding: calc(var(--size-1) * 1.25) var(--size-2);
+    font-size: var(--font-size-0);
+  }
+
+  /* Variants */
+  .ok {
+    background-color: var(--status-ok-bg);
+    color: var(--status-ok-text);
+    border-color: var(--status-ok-border);
+  }
+
+  .warning {
+    background-color: var(--status-warning-bg);
+    color: var(--status-warning-text);
+    border-color: var(--status-warning-border);
+  }
+
+  .critical {
+    background-color: var(--status-critical-bg);
+    color: var(--status-critical-text);
+    border-color: var(--status-critical-border);
+  }
+
+  .info {
+    background-color: var(--status-info-bg);
+    color: var(--status-info-text);
+    border-color: var(--status-info-border);
+  }
+
+  .neutral {
+    background-color: var(--status-neutral-bg);
+    color: var(--status-neutral-text);
+    border-color: var(--status-neutral-border);
+  }
+</style>

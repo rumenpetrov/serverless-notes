@@ -1,0 +1,91 @@
+---
+interface Props {
+  variant?: "raised" | "outlined" | "flat" | "sunken";
+  padding?: "none" | "sm" | "md" | "lg";
+  interactive?: boolean;
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = "raised",
+  padding = "md",
+  interactive = false,
+  as: Tag = "div",
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<Tag
+  class:list={[
+    "card",
+    `variant-${variant}`,
+    `padding-${padding}`,
+    { interactive },
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style>
+  .card {
+    border-radius: var(--radius-card);
+    transition:
+      background-color 0.15s var(--ease-3),
+      border-color 0.15s var(--ease-3),
+      box-shadow 0.15s var(--ease-3);
+  }
+
+  /* Variants */
+  .variant-raised {
+    background-color: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-card);
+  }
+
+  .variant-outlined {
+    background-color: var(--surface-card);
+    border: 1px solid var(--border-default);
+  }
+
+  .variant-flat {
+    background-color: var(--surface-card);
+    border: 1px solid transparent;
+  }
+
+  .variant-sunken {
+    background-color: var(--surface-sunken);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Padding */
+  .padding-none {
+    padding: 0;
+  }
+
+  .padding-sm {
+    padding: var(--space-3);
+  }
+
+  .padding-md {
+    padding: var(--space-5);
+  }
+
+  .padding-lg {
+    padding: var(--space-6);
+  }
+
+  /* Interactive */
+  .interactive {
+    cursor: pointer;
+  }
+
+  .interactive:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-raised);
+  }
+</style>

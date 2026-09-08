@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
 import Text from "@components/Text.astro";
 import TextLink from "@components/TextLink.astro";
 import Link from "@components/Link.astro";
@@ -10,32 +11,40 @@ const templates = await getCollection("templates");
 ---
 
 <Layout>
-  <main class="container">
-    <TextLink href="/" class="back-link">Back to Home</TextLink>
+  <Container size="narrow" class="page-container">
+    <nav>
+      <TextLink href="/">&larr; Back to Home</TextLink>
+    </nav>
 
     <Text variant="h1">Available Templates</Text>
 
-    {
-      templates.map((template) => (
-        <Button
-          variant="secondary"
-          as={Link}
-          href={`/templates/${template.id}`}
-        >
-          {template.data.title}
-        </Button>
-      ))
-    }
-  </main>
+    <div class="template-list">
+      {
+        templates.map((template) => (
+          <Button
+            variant="secondary"
+            as={Link}
+            href={`/templates/${template.id}`}
+          >
+            {template.data.title}
+          </Button>
+        ))
+      }
+    </div>
+  </Container>
 </Layout>
 
 <style>
-  .container {
-    max-width: var(--size-content-3);
-    margin-inline: auto;
-    padding: var(--size-8) 0;
+  .page-container {
+    padding-block: var(--space-8);
     display: flex;
     flex-direction: column;
-    gap: var(--size-3);
+    gap: var(--space-4);
+  }
+
+  .template-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
   }
 </style>

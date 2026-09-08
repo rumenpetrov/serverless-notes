@@ -1,0 +1,111 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"textarea"> {
+  size?: "sm" | "md" | "lg";
+  isError?: boolean;
+  resize?: "none" | "vertical" | "horizontal" | "both";
+  class?: string;
+}
+
+const {
+  size = "md",
+  isError = false,
+  resize = "vertical",
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<textarea
+  class:list={[
+    "textarea",
+    `size-${size}`,
+    `resize-${resize}`,
+    { "has-error": isError },
+    className,
+  ]}
+  {...rest}><slot /></textarea>
+
+<style>
+  .textarea {
+    display: block;
+    width: 100%;
+    min-height: 120px;
+    box-sizing: border-box;
+    font-family: inherit;
+    color: var(--input-text);
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-control);
+    line-height: var(--font-lineheight-3);
+    transition:
+      border-color 0.15s var(--ease-3),
+      box-shadow 0.15s var(--ease-3);
+  }
+
+  .textarea::placeholder {
+    color: var(--input-placeholder);
+  }
+
+  .textarea:hover:not(:disabled) {
+    border-color: var(--input-border-hover);
+  }
+
+  .textarea:focus-visible {
+    outline: none;
+    border-color: var(--input-border-focus);
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring);
+  }
+
+  .textarea:disabled {
+    background-color: var(--input-disabled-bg);
+    border-color: var(--input-disabled-border);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.75;
+  }
+
+  /* Sizes */
+  .size-sm {
+    padding: var(--size-1) var(--size-2);
+    font-size: var(--font-size-0);
+  }
+
+  .size-md {
+    padding: var(--size-2) var(--size-3);
+    font-size: var(--font-size-1);
+  }
+
+  .size-lg {
+    padding: var(--size-3) var(--size-4);
+    font-size: var(--font-size-2);
+  }
+
+  /* Resize options */
+  .resize-none {
+    resize: none;
+  }
+
+  .resize-vertical {
+    resize: vertical;
+  }
+
+  .resize-horizontal {
+    resize: horizontal;
+  }
+
+  .resize-both {
+    resize: both;
+  }
+
+  /* Error state */
+  .has-error {
+    border-color: var(--status-critical-text);
+  }
+
+  .has-error:focus-visible {
+    border-color: var(--status-critical-text);
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--status-critical-border);
+  }
+</style>

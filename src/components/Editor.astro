@@ -1,6 +1,10 @@
 ---
 import { getEntry } from "astro:content";
 import Text from "@components/Text.astro";
+import FormField from "@components/FormField.astro";
+import Input from "@components/Input.astro";
+import Textarea from "@components/Textarea.astro";
+import Badge from "@components/Badge.astro";
 
 interface Props {
   templateId: string;
@@ -18,27 +22,27 @@ const template = entry?.data;
   {
     template && (
       <>
-        <header>
-          <Text variant="h1">
-            {template.title} - <span>v{template.version}</span>
-          </Text>
+        <header class="header">
+          <div class="title-row">
+            <Text variant="h2">{template.title}</Text>
+            <Badge variant="neutral" size="sm">v{template.version}</Badge>
+          </div>
 
-          <Text>{template.description}</Text>
+          <Text variant="p" class="description">{template.description}</Text>
         </header>
 
         <form id="editor-form">
           {template.content.map((field) => (
-            <div class="field">
-              <label for={field.name}>{field.name}</label>
+            <FormField label={field.name} htmlFor={field.name}>
               {field.type === "textarea" ? (
-                <textarea
+                <Textarea
                   name={field.name}
                   id={field.name}
                   placeholder={field.defaultValue}
                   set:text={field.defaultValue}
-                ></textarea>
+                />
               ) : field.type === "number" ? (
-                <input
+                <Input
                   type="number"
                   name={field.name}
                   id={field.name}
@@ -46,7 +50,7 @@ const template = entry?.data;
                   value={field.defaultValue}
                 />
               ) : (
-                <input
+                <Input
                   type="text"
                   name={field.name}
                   id={field.name}
@@ -54,7 +58,7 @@ const template = entry?.data;
                   value={field.defaultValue}
                 />
               )}
-            </div>
+            </FormField>
           ))}
         </form>
       </>
@@ -64,34 +68,24 @@ const template = entry?.data;
 
 <style>
   .box {
-    padding: 24px;
+    padding: var(--space-5);
   }
 
-  .field {
-    margin-bottom: 16px;
+  .header {
+    margin-bottom: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    text-transform: capitalize;
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
   }
 
-  input,
-  textarea {
-    display: block;
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid var(--input-border);
-    border-radius: 4px;
-    font-size: 16px;
-  }
-
-  textarea {
-    min-height: 150px;
-    resize: vertical;
+  .description {
+    color: var(--text-muted);
   }
 </style>
 

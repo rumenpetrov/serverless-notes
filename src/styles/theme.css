@@ -1,39 +1,114 @@
 /* Semantic theme tokens — single source of truth for all component styling.
- * Uses light-dark() for automatic light/dark adaptation without data-theme selectors.
- * Components and pages MUST use these tokens, never primitive Open Props or raw colors. */
+ * Based on intentional minimalism and CSS light-dark() automatic adaptation.
+ * Components and pages MUST use these theme tokens, never primitive Open Props or raw colors. */
 
 :root {
-  /* Links */
-  --link: light-dark(var(--indigo-6), var(--indigo-3));
-  --link-hover: light-dark(var(--indigo-8), var(--indigo-1));
+  /* Enable automatic light-dark() resolution based on browser/system preference */
+  color-scheme: light dark;
 
-  /* Status indicators */
+  /* --- Brand & Accent --- */
+  --brand: light-dark(var(--indigo-7), var(--indigo-4));
+  --brand-hover: light-dark(var(--indigo-8), var(--indigo-3));
+  --brand-active: light-dark(var(--indigo-9), var(--indigo-2));
+  --brand-subtle: light-dark(var(--indigo-0), var(--indigo-11));
+  --brand-contrast: light-dark(white, var(--gray-12));
+
+  /* --- Links --- */
+  --link: light-dark(var(--indigo-7), var(--indigo-4));
+  --link-hover: light-dark(var(--indigo-9), var(--indigo-2));
+
+  /* --- Typography / Foreground --- */
+  --text-1: light-dark(var(--gray-9), var(--gray-1));
+  --text-2: light-dark(var(--gray-7), var(--gray-4));
+  --text-muted: light-dark(var(--gray-6), var(--gray-5));
+  --text-inverse: light-dark(var(--gray-0), var(--gray-12));
+
+  /* --- Surfaces & Backgrounds --- */
+  --surface-base: light-dark(var(--gray-0), var(--gray-12));
+  --surface-card: light-dark(white, var(--gray-11));
+  --surface-raised: light-dark(white, var(--gray-10));
+  --surface-raised-hover: light-dark(var(--gray-1), var(--gray-9));
+  --surface-sunken: light-dark(var(--gray-1), var(--gray-12));
+  --surface-overlay: light-dark(rgba(255, 255, 255, 0.85), rgba(22, 25, 29, 0.85));
+  --preview-bg: light-dark(#fefefe, var(--gray-11));
+
+  /* --- Borders & Dividers --- */
+  --border-subtle: light-dark(var(--gray-3), var(--gray-8));
+  --border-default: light-dark(var(--gray-4), var(--gray-7));
+  --border-strong: light-dark(var(--gray-6), var(--gray-5));
+  --border-muted: var(--border-subtle);
+
+  /* --- Inputs & Form Controls --- */
+  --input-bg: light-dark(white, var(--gray-11));
+  --input-border: light-dark(var(--gray-4), var(--gray-7));
+  --input-border-hover: light-dark(var(--gray-6), var(--gray-5));
+  --input-border-focus: var(--brand);
+  --input-placeholder: light-dark(var(--gray-5), var(--gray-6));
+  --input-text: var(--text-1);
+  --input-disabled-bg: light-dark(var(--gray-1), var(--gray-10));
+  --input-disabled-border: light-dark(var(--gray-3), var(--gray-8));
+
+  /* --- Buttons --- */
+  --button-primary-bg: light-dark(var(--indigo-7), var(--indigo-4));
+  --button-primary-bg-hover: light-dark(var(--indigo-8), var(--indigo-3));
+  --button-primary-bg-active: light-dark(var(--indigo-9), var(--indigo-2));
+  --button-primary-text: light-dark(white, var(--gray-12));
+
+  --button-secondary-bg: light-dark(white, var(--gray-11));
+  --button-secondary-bg-hover: light-dark(var(--gray-1), var(--gray-10));
+  --button-secondary-border: var(--border-default);
+  --button-secondary-text: var(--text-1);
+
+  --button-ghost-bg: transparent;
+  --button-ghost-bg-hover: light-dark(var(--gray-2), var(--gray-9));
+  --button-ghost-text: var(--text-1);
+
+  --button-danger-bg: light-dark(var(--red-7), var(--red-5));
+  --button-danger-bg-hover: light-dark(var(--red-8), var(--red-4));
+  --button-danger-text: white;
+
+  /* --- Status Indicators (Badges & Alerts) --- */
   --status-ok-bg: light-dark(#e6f4ea, #1e3a2e);
-  --status-ok-text: light-dark(#1e8e3e, #7dd389);
+  --status-ok-text: light-dark(#137333, #7dd389);
+  --status-ok-border: light-dark(#ceead6, #2d5a45);
+
   --status-warning-bg: light-dark(#fef7e0, #3e2e00);
   --status-warning-text: light-dark(#b06e00, #f0b34b);
+  --status-warning-border: light-dark(#feefc3, #5a4300);
+
   --status-critical-bg: light-dark(#fce8e6, #3e1a18);
-  --status-critical-text: light-dark(#d93025, #f28b82);
+  --status-critical-text: light-dark(#c5221f, #f28b82);
+  --status-critical-border: light-dark(#fad2cf, #5c2724);
 
-  /* Inputs */
-  --input-border: light-dark(var(--gray-5), var(--gray-7));
-  --input-border-focus: light-dark(var(--indigo-5), var(--indigo-4));
+  --status-info-bg: light-dark(#e8f0fe, #1a2f4c);
+  --status-info-text: light-dark(#1a73e8, #8ab4f8);
+  --status-info-border: light-dark(#d2e3fc, #284773);
 
-  /* Surfaces */
-  --surface-raised: light-dark(white, var(--surface-3));
-  --surface-raised-hover: light-dark(var(--gray-1), var(--surface-4));
-  --border-muted: light-dark(var(--gray-4), var(--gray-7));
-  --text-muted: light-dark(var(--gray-6), var(--gray-3));
+  --status-neutral-bg: light-dark(var(--gray-2), var(--gray-9));
+  --status-neutral-text: var(--text-2);
+  --status-neutral-border: var(--border-subtle);
 
-  /* Preview */
-  --preview-bg: light-dark(#fefefe, var(--surface-2));
+  /* --- Focus Ring --- */
+  --focus-ring: light-dark(var(--indigo-5), var(--indigo-4));
+  --focus-ring-offset: 2px;
+  --focus-ring-width: 2px;
 
-  /* Buttons */
-  --button-primary-bg: light-dark(var(--indigo-6), var(--indigo-4));
-  --button-primary-bg-hover: light-dark(var(--indigo-7), var(--indigo-3));
-  --button-primary-text: contrast-color(var(--button-primary-bg));
-  --button-secondary-bg: light-dark(transparent, transparent);
-  --button-secondary-bg-hover: var(--surface-raised-hover);
-  --button-secondary-border: var(--input-border);
-  --button-secondary-text: var(--text-1);
+  /* --- Elevation & Shadows --- */
+  --shadow-card: var(--shadow-1);
+  --shadow-raised: var(--shadow-2);
+  --shadow-overlay: var(--shadow-4);
+
+  /* --- Radii Aliases --- */
+  --radius-control: var(--radius-2);
+  --radius-card: var(--radius-3);
+  --radius-badge: var(--radius-round);
+
+  /* --- Spacing Aliases --- */
+  --space-1: var(--size-1);
+  --space-2: var(--size-2);
+  --space-3: var(--size-3);
+  --space-4: var(--size-4);
+  --space-5: var(--size-5);
+  --space-6: var(--size-6);
+  --space-8: var(--size-8);
 }

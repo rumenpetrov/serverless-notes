@@ -1,0 +1,79 @@
+---
+interface Props {
+  label?: string;
+  htmlFor?: string;
+  hint?: string;
+  error?: string;
+  required?: boolean;
+  class?: string;
+}
+
+const {
+  label,
+  htmlFor,
+  hint,
+  error,
+  required = false,
+  class: className,
+} = Astro.props;
+---
+
+<div class:list={["form-field", { "has-error": !!error }, className]}>
+  {
+    label && (
+      <label for={htmlFor} class="label">
+        <span>{label}</span>
+        {required && <span class="required" aria-hidden="true">*</span>}
+      </label>
+    )
+  }
+
+  <div class="control">
+    <slot />
+  </div>
+
+  {hint && !error && <p class="hint">{hint}</p>}
+  {error && <p class="error" role="alert">{error}</p>}
+</div>
+
+<style>
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-bottom: var(--space-4);
+  }
+
+  .label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-6);
+    color: var(--text-1);
+    line-height: var(--font-lineheight-1);
+  }
+
+  .required {
+    color: var(--status-critical-text);
+  }
+
+  .control {
+    width: 100%;
+  }
+
+  .hint {
+    margin: 0;
+    font-size: var(--font-size-0);
+    color: var(--text-muted);
+    line-height: var(--font-lineheight-2);
+  }
+
+  .error {
+    margin: 0;
+    font-size: var(--font-size-0);
+    color: var(--status-critical-text);
+    font-weight: var(--font-weight-5);
+    line-height: var(--font-lineheight-2);
+  }
+</style>

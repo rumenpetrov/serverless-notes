@@ -18,11 +18,19 @@ const { class: className, ...rest } = Astro.props;
     color: var(--link);
     font-weight: var(--font-weight-6);
     text-decoration: none;
-    transition: color 0.15s var(--ease-3);
+    border-radius: var(--radius-1);
+    transition:
+      color 0.15s var(--ease-3),
+      box-shadow 0.15s var(--ease-3);
   }
 
   .text-link:hover {
     color: var(--link-hover);
     text-decoration: underline;
+  }
+
+  .text-link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring);
   }
 </style>

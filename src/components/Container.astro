@@ -1,0 +1,50 @@
+---
+interface Props {
+  size?: "prose" | "narrow" | "normal" | "wide";
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  size = "narrow",
+  as: Tag = "div",
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<Tag class:list={["container", `size-${size}`, className]} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .container {
+    width: 100%;
+    margin-inline: auto;
+    box-sizing: border-box;
+    padding-inline: var(--space-4);
+  }
+
+  .size-prose {
+    max-width: var(--size-content-2);
+  }
+
+  .size-narrow {
+    max-width: var(--size-content-3);
+  }
+
+  .size-normal {
+    max-width: 800px;
+  }
+
+  .size-wide {
+    max-width: 1140px;
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      padding-inline: var(--space-6);
+    }
+  }
+</style>

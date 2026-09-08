@@ -2,20 +2,36 @@
 import type { HTMLAttributes } from "astro/types";
 
 interface Props {
-  variant?: "primary" | "secondary";
-  as?: keyof HTMLElementTagNameMap;
+  variant?: "primary" | "secondary" | "ghost" | "danger";
+  size?: "sm" | "md" | "lg";
+  as?: any;
   type?: "button" | "submit" | "reset";
   class?: string;
+  disabled?: boolean;
   [key: string]: any;
 }
 
-const { variant = "primary", as, class: className, type = "button", ...rest } = Astro.props;
+const {
+  variant = "primary",
+  size = "md",
+  as,
+  class: className,
+  type = "button",
+  disabled = false,
+  ...rest
+} = Astro.props;
 
 const Tag = as ?? "button";
-const isButton = Tag === "button";
+const isNativeButton = Tag === "button";
 ---
 
-<Tag class:list={["button", variant, className]} {...rest} type={isButton ? type : undefined}>
+<Tag
+  class:list={["button", variant, `size-${size}`, className]}
+  type={isNativeButton ? type : undefined}
+  disabled={isNativeButton ? disabled : undefined}
+  aria-disabled={disabled ? "true" : undefined}
+  {...rest}
+>
   <slot />
 </Tag>
 
@@ -24,34 +40,98 @@ const isButton = Tag === "button";
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--size-2);
-    padding: var(--size-2) var(--size-4);
-    border: 1px solid transparent;
-    border-radius: var(--radius-2);
-    font-size: var(--font-size-1);
+    gap: var(--space-2);
+    font-family: inherit;
     font-weight: var(--font-weight-6);
     line-height: var(--font-lineheight-1);
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.15s var(--ease-3), border-color 0.15s var(--ease-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-control);
+    box-sizing: border-box;
+    white-space: nowrap;
+    user-select: none;
+    transition:
+      background-color 0.15s var(--ease-3),
+      border-color 0.15s var(--ease-3),
+      color 0.15s var(--ease-3),
+      box-shadow 0.15s var(--ease-3),
+      transform 0.05s var(--ease-3);
   }
 
+  .button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring);
+  }
+
+  .button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .button:disabled,
+  .button[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+  }
+
+  /* Sizes */
+  .size-sm {
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--font-size-0);
+  }
+
+  .size-md {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-1);
+  }
+
+  .size-lg {
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--font-size-2);
+  }
+
+  /* Variants */
   .primary {
-    background: var(--button-primary-bg);
+    background-color: var(--button-primary-bg);
     color: var(--button-primary-text);
   }
 
-  .primary:hover {
-    background: var(--button-primary-bg-hover);
+  .primary:hover:not(:disabled) {
+    background-color: var(--button-primary-bg-hover);
+  }
+
+  .primary:active:not(:disabled) {
+    background-color: var(--button-primary-bg-active);
   }
 
   .secondary {
-    background: var(--button-secondary-bg);
+    background-color: var(--button-secondary-bg);
     border-color: var(--button-secondary-border);
     color: var(--button-secondary-text);
   }
 
-  .secondary:hover {
-    background: var(--button-secondary-bg-hover);
+  .secondary:hover:not(:disabled) {
+    background-color: var(--button-secondary-bg-hover);
+    border-color: var(--border-strong);
+  }
+
+  .ghost {
+    background-color: var(--button-ghost-bg);
+    color: var(--button-ghost-text);
+  }
+
+  .ghost:hover:not(:disabled) {
+    background-color: var(--button-ghost-bg-hover);
+  }
+
+  .danger {
+    background-color: var(--button-danger-bg);
+    color: var(--button-danger-text);
+  }
+
+  .danger:hover:not(:disabled) {
+    background-color: var(--button-danger-bg-hover);
   }
 </style>

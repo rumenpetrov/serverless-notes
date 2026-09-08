@@ -11,7 +11,7 @@ To prevent documentation drift, detailed specifications are kept in dediced file
 * **Core Architecture**: [docs/architecture.md](docs/architecture.md) — Explains the Zero-DB engine, Oreh SDK compression, and iframe reactive lifecycle.
 * **Development Guide**: [docs/development-guide.md](docs/development-guide.md) — Contains dynamic template layouts, event protocols, and the critical **`createPath`** routing standard.
 * **Naming Standards**: [docs/standards/naming.md](docs/standards/naming.md) — Strict project naming conventions.
-* **Styling Philosophy**: [design-system.md](design-system.md) — Intentional minimalist styling policies.
+* **Styling Philosophy**: [DESIGN.md](DESIGN.md) — Intentional minimalist styling policies.
 * **AI Assistant Guidelines**: [.cursorrules](.cursorrules) — Enforced constraints for automated coding systems.
 
 ---

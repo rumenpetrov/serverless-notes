@@ -5,7 +5,8 @@ import Container from "@components/Container.astro";
 import Text from "@components/Text.astro";
 import TextLink from "@components/TextLink.astro";
 import Link from "@components/Link.astro";
-import Button from "@components/Button.astro";
+import Card from "@components/Card.astro";
+import Badge from "@components/Badge.astro";
 
 const templates = await getCollection("templates");
 ---
@@ -16,21 +17,45 @@ const templates = await getCollection("templates");
       <TextLink href="/">&larr; Back to Home</TextLink>
     </nav>
 
-    <Text variant="h1">Available Templates</Text>
-
-    <div class="template-list">
-      {
-        templates.map((template) => (
-          <Button
-            variant="secondary"
-            as={Link}
-            href={`/templates/${template.id}`}
-          >
-            {template.data.title}
-          </Button>
-        ))
-      }
+    <div class="page-header">
+      <Text variant="h1">Available Templates</Text>
+      <Text variant="muted">Browse and edit templates.</Text>
     </div>
+
+    {
+      templates.length > 0 ? (
+        <div class="template-list">
+          {templates.map((template) => (
+            <Card
+              as={Link}
+              interactive
+              variant="outlined"
+              padding="md"
+              href={`/templates/${template.id}`}
+              class="template-card"
+            >
+              <div class="card-body">
+                <Text variant="h4">{template.data.title}</Text>
+                <Text variant="muted">{template.data.description}</Text>
+              </div>
+              <div class="card-footer">
+                <Badge variant="neutral" size="sm">
+                  v{template.data.version}
+                </Badge>
+                <span class="arrow" aria-hidden="true">
+                  &rarr;
+                </span>
+              </div>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <Card variant="sunken" padding="lg" class="empty-state">
+          <Text variant="h4">No templates available yet.</Text>
+          <Text variant="muted">Check back soon!</Text>
+        </Card>
+      )
+    }
   </Container>
 </Layout>
 
@@ -42,9 +67,53 @@ const templates = await getCollection("templates");
     gap: var(--space-4);
   }
 
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
   .template-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+  }
+
+  .template-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .arrow {
+    color: var(--text-muted);
+    font-size: var(--font-size-3);
+    transition: color 0.15s var(--ease-3);
+  }
+
+  .template-card:hover .arrow {
+    color: var(--brand);
+  }
+
+  .empty-state {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
   }
 </style>
